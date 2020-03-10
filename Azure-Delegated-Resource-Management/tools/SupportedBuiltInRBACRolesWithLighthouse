@@ -1,0 +1,17 @@
+// Get All Built-in Azure RBAC roles 
+
+$roles = Get-AzRoleDefinition | Select Name | Set-Content all.txt
+
+//Extract out Built-in Azure RBAC roles that are not supported (i.e. ones that have DataActions and NotDataActioins 
+
+$NotSupportedroles = Get-AzRoleDefinition | Where-Object -FilterScript { $_.DataActions -ne '' -or $_.NotDataActions 
+-ne '' } | Select Name | Set-Content notsupported.txt
+
+//Do a compare and output Built-in Azure RBAC roles that are supported with Lighthouse into 'supported.txt' file 
+
+$objects = @{
+  ReferenceObject = (Get-Content all.txt)
+  DifferenceObject = (Get-Content notsupported.txt)
+}
+
+Compare-Object @objects | Set-Content supported.txt
