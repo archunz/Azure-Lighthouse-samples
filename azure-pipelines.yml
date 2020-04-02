@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'AzureLighthouseTest-pipeline'
+    subscriptionId: '0597b00f-3c2d-40de-a3c0-d7961f180d69'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'Lighthouse_Deployment_Test'
+    location: 'Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: 'https://raw.githubusercontent.com/archunz/Azure-Lighthouse-samples/master/testLighthouseDeployment/delegatedResourceManagement.json'
+    csmParametersFile: 'https://raw.githubusercontent.com/archunz/Azure-Lighthouse-samples/master/testLighthouseDeployment/delegatedResourceManagement.parameters.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'Archba_Lighthouse_Deployment_TEST'
